@@ -359,11 +359,10 @@ function HealCommClassic:UpdateColors()
 			hpBars[unit]:SetStatusBarColor(unpack(HCCdb.global.healColor))
 		end
 		if playerHpBars[unit] then
-			HealCommSettings.playerHealColor=playerHealColor
-			playerHpBars[unit]:SetStatusBarColor(HealCommSettings.playerHealColor.red, HealCommSettings.playerHealColor.green, HealCommSettings.playerHealColor.blue, HealCommSettings.playerHealColor.alpha)
+			playerHpBars[unit]:SetStatusBarColor(unpack(HCCdb.global.playerHealColor))
 		end
 		if nextHpBars[unit] then
-			nextHpBars[unit]:SetStatusBarColor(HealCommSettings.healColor.red, HealCommSettings.healColor.green, HealCommSettings.healColor.blue, HealCommSettings.healColor.alpha)
+			nextHpBars[unit]:SetStatusBarColor(unpack(HCCdb.global.healColor))
 		end
 		if hotBars[unit] then
 			hotBars[unit]:SetStatusBarColor(unpack(HCCdb.global.hotColor))
@@ -561,7 +560,6 @@ function HealCommClassic:HealComm_GUIDDisappeared(event, guid)
 end
 
 -- Needed for temp implementation of enhancment
-local pendingHeals, pendingHots = libCHC.pendingHeals, libCHC.pendingHots
 local DIRECT_HEALS = 0x01
 local CHANNEL_HEALS = 0x02
 local HOT_HEALS = 0x04
@@ -574,7 +572,7 @@ local function GetNextHealAmount(guid, bitFlag, time, ignoreGUID, srcGUID)
 	local healTime, healAmount, healFrom
 	local currentTime = GetTime()
 
-	for _, tbl in pairs({pendingHeals, pendingHots}) do
+	for _, tbl in pairs({libCHC.pendingHeals, libCHC.pendingHots}) do
 		for casterGUID, spells in pairs(tbl) do
 			if( not ignoreGUID or ignoreGUID ~= casterGUID ) and (not srcGUID or srcGUID == casterGUID) then
 				for _, pending in pairs(spells) do
